@@ -1,0 +1,203 @@
+//Rotten Oranges
+import java.util.*;
+public class RottenOrange 
+{
+	static int R=3;
+	static int C=5;
+	static boolean issafe(int i, int j)
+	{
+		if(i>=0 && i<R && j>=0 && j<C)
+			return true;
+		return false;
+	}
+	static int rotOranges(int arr[][])
+	{
+		boolean Rotten = false;
+		int no=2;
+		while(true)
+		{
+			for(int i=0;i<R;i++)
+			{
+				for(int j=0;j<C;j++)
+				{
+					if(arr[i][j]==no)
+					{
+						if(issafe(i+1,j) && arr[i+1][j]==1)
+						{
+							arr[i+1][j]=arr[i][j]+1;
+							Rotten = true;
+						}
+						if(issafe(i,j+1) && arr[i][j+1]==1)
+						{
+							arr[i][j+1]=arr[i][j]+1;
+							Rotten = true;
+						}
+						if(issafe(i-1,j) && arr[i-1][j]==1)
+						{
+							arr[i-1][j]=arr[i][j]+1;
+							Rotten = true;
+						}
+						if(issafe(i,j-1) && arr[i][j-1]==1)
+						{
+							arr[i][j-1]=arr[i][j]+1;
+							Rotten = true;
+						}
+					}
+				}
+			}
+			if(!Rotten)
+				break;
+			Rotten = false;
+			no++;
+		}
+    for(int i = 0; i < R; i++)
+    {
+        for(int j = 0; j < C; j++) 
+        {
+             
+            // If any orange is found to be
+            // not rotten then ans is not possible
+            if (arr[i][j] == 1)
+                return -1;
+        }
+    }
+		return no-2;
+	}
+	public static void main(String[] args) 
+	{
+		int v[][] =  {{ 2, 1, 0, 2, 1 },
+                      { 1, 0, 1, 2, 1 },
+                      { 1, 0, 0, 2, 1 }};
+        System.out.println("Max time incurred: " +rotOranges(v));
+	}
+}
+// above given solution is Naive Method
+// below is efficient solution
+import java.util.*;
+class coordinate
+{
+	int x;
+	int y;
+	coordinate(int x,int y)
+	{
+		this.x=x;
+		this.y=y;
+	}
+}
+public class RottenOrange 
+{
+	static int R=3;
+	static int C=5;
+	static boolean issafe(int i, int j)
+	{
+		if(i>=0 && i<R && j>=0 && j<C)
+			return true;
+		return false;
+	}
+	static boolean checkall(int arr[][])
+	{
+		for(int i=0;i<R;i++)
+		{
+			for(int j=0;j<C;j++)
+			{
+				if(arr[i][j]==1)
+					return true;
+			}
+		}
+		return false;
+	}
+	static boolean isDelim(coordinate temp)
+	{
+		if(temp.x==-1 && temp.y==-1)
+			return true;
+		return false;
+	}
+	static int rotOranges(int arr[][])
+	{
+		int ans=0;
+		Queue<coordinate> q = new LinkedList<>();
+		for(int i=0;i<R;i++)
+		{
+			for(int j =0;j<C;j++)
+			{
+				if(arr[i][j]==2)
+					q.add(new coordinate(i,j));
+			}
+		}
+		q.add(new coordinate(-1,-1));
+		while(!q.isEmpty())
+		{
+			boolean flag = false;
+			while(!isDelim(q.peek()))
+			{
+				coordinate temp = q.peek();
+				if(issafe(temp.x+1,temp.y) && arr[temp.x+1][temp.y]==1)
+				{
+					if(!flag)
+					{
+						ans++;
+						flag=true;
+					}
+					arr[temp.x+1][temp.y]=2;
+					temp.x++;
+					q.add(new coordinate(temp.x,temp.y));
+					temp.x--;
+				}
+				if(issafe(temp.x-1,temp.y) && arr[temp.x-1][temp.y]==1)
+				{
+					if(!flag)
+					{
+						ans++;
+						flag=true;
+					}
+					arr[temp.x-1][temp.y]=2;
+					temp.x--;
+					q.add(new coordinate(temp.x,temp.y));
+					temp.x++;
+				}
+				if(issafe(temp.x,temp.y+1) && arr[temp.x][temp.y+1]==1)
+				{
+					if(!flag)
+					{
+						ans++;
+						flag=true;
+					}
+					arr[temp.x][temp.y+1]=2;
+					temp.y++;
+					q.add(new coordinate(temp.x,temp.y));
+					temp.y--;
+				}
+				if(issafe(temp.x,temp.y-1) && arr[temp.x][temp.y-1]==1)
+				{
+					if(!flag)
+					{
+						ans++;
+						flag=true;
+					}
+					arr[temp.x][temp.y-1]=2;
+					temp.y--;
+					q.add(new coordinate(temp.x,temp.y));
+					temp.y++;
+				}
+				q.remove();  
+			}
+			q.remove();
+			if(!q.isEmpty())
+				q.add(new coordinate(-1,-1));
+		}
+		return checkall(arr)?-1:ans;
+	}
+	public static void main(String[] args) 
+	{
+		int arr[][] = { {1, 1, 0, 1, 1},
+                        {1, 0, 1, 1, 1},
+                        {1, 0, 0, 1, 1}};
+		
+        int ans = rotOranges(arr);
+        
+        if(ans == -1)
+             System.out.println("All oranges cannot rot");
+        else
+             System.out.println("Time required for all oranges to rot = " + ans);
+	}
+}
