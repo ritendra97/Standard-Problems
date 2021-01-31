@@ -1,0 +1,75 @@
+//Hamiltonian Path & Cycles in Graphs
+import java.util.*;
+public class GraphProblem 
+{
+	static void addEdge(ArrayList<ArrayList<Integer>> graph,int v,int w)
+	{
+		graph.get(v).add(w);
+	}
+	static void hamiltonionUtil(HashSet<Integer> visited,ArrayList<ArrayList<Integer>> graph,int src,int osrc,String psf)
+	{
+		visited.add(src);
+		if(visited.size()==graph.size()-1)
+		{
+			System.out.println(psf);
+			boolean closingEdgebound=false;
+			for(Integer e : graph.get(src))
+			{
+				if(e==osrc)
+				{
+					closingEdgebound=true;
+					break;
+				}
+			}
+			if(closingEdgebound=true)
+			{
+				System.out.println("*");
+			}
+			else
+			{
+				System.out.println(".");
+			}
+			return;
+		}
+		for(Integer child : graph.get(src))
+		{
+			if(!visited.contains(child))
+			{
+				hamiltonionUtil(visited,graph,child,osrc,psf+child);
+			}
+		}
+		visited.remove(src);
+	}
+	static void hamiltonianPathCycle(HashSet<Integer> visited,ArrayList<ArrayList<Integer>> graph, int src,int osrc)
+	{
+		hamiltonionUtil(visited,graph,src,osrc,src+"");
+	}
+	public static void main(String[] args) 
+	{
+		ArrayList<ArrayList<Integer>> graph = new ArrayList<ArrayList<Integer>>();
+		HashSet<Integer> visited = new HashSet<>();
+		for(int i=0;i<7;i++)
+		{
+			graph.add(i,new ArrayList<Integer>());
+		}
+		addEdge(graph,0,1);
+		addEdge(graph,0,3);
+		addEdge(graph,1,0);
+		addEdge(graph,1,2);
+		addEdge(graph,2,1);
+		addEdge(graph,2,3);
+		addEdge(graph,2,5);
+		addEdge(graph,3,0);
+		addEdge(graph,3,2);
+		addEdge(graph,3,4);
+		addEdge(graph,4,3);
+		addEdge(graph,4,5);
+		addEdge(graph,4,6);
+		addEdge(graph,5,2);
+		addEdge(graph,5,4);
+		addEdge(graph,5,6);
+		addEdge(graph,6,4);
+		addEdge(graph,6,5);
+		hamiltonianPathCycle(visited,graph,0,0);
+	}
+}
