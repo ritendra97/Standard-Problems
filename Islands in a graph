@@ -1,0 +1,93 @@
+//the interviewer can ask this problem in two ways like 1st one is count number of island in (LEFT, RIGHT, TOP, DOWN) direction or like count number of island with the digonal 
+// Direction also like (LEFT, RIGHT, TOP, DOWN)+diagonal
+// This is DFS Solution only (LEFT, RIGHT, TOP, DOWN)
+import java.util.*;
+public class GraphProblem 
+{
+	public void dfs(int M[][], boolean visited[][],int i,int j)
+	{
+		if(i<0 || j<0 || i==M.length || j==M[0].length || visited[i][j]==true || M[i][j]==0)
+			return;
+		visited[i][j]=true;
+		dfs(M,visited,i-1,j);
+		dfs(M,visited,i,j-1);
+		dfs(M,visited,i+1,j);
+		dfs(M,visited,i,j+1);
+		
+	}
+	public int countisland(int M[][], boolean visited[][])
+	{
+		int count=0;
+		for(int i=0;i<M.length;++i)
+		{
+			for(int j=0;j<M[i].length;++j)
+			{
+				if(!visited[i][j] && M[i][j]==1)
+				{
+					dfs(M,visited,i,j);
+					++count;
+				}
+			}
+		}
+		return count;
+	}
+	public static void main(String[] args) 
+	{
+		GraphProblem g = new GraphProblem();
+		int M[][] = {{ 1, 1, 0, 0, 0 }, 
+                     { 0, 1, 0, 0, 1 }, 
+                     { 1, 0, 0, 1, 1 }, 
+                     { 0, 0, 0, 0, 0 }, 
+                     { 1, 0, 1, 0, 1 }};
+		int n = M.length;
+		boolean visited[][] = new boolean[n][M[0].length];
+		System.out.println(g.countisland(M,visited));
+	}
+}
+// This is DFS Solution only (LEFT, RIGHT, TOP, DOWN)+Diagonal
+import java.util.*;
+public class GraphProblem 
+{
+	public void dfs(int M[][], boolean visited[][],int i,int j)
+	{
+		if(i<0 || j<0 || i==M.length || j==M[0].length || visited[i][j]==true || M[i][j]==0)
+			return;
+		visited[i][j]=true;
+		dfs(M,visited,i-1,j);
+		dfs(M,visited,i,j-1);
+		dfs(M,visited,i+1,j);
+		dfs(M,visited,i,j+1);
+		dfs(M,visited,i-1,j-1);
+		dfs(M,visited,i-1,j+1);
+		dfs(M,visited,i+1,j-1);
+		dfs(M,visited,i+1,j+1);
+	}
+	public int countisland(int M[][], boolean visited[][])
+	{
+		int count=0;
+		for(int i=0;i<M.length;++i)
+		{
+			for(int j=0;j<M[i].length;++j)
+			{
+				if(!visited[i][j] && M[i][j]==1)
+				{
+					dfs(M,visited,i,j);
+					++count;
+				}
+			}
+		}
+		return count;
+	}
+	public static void main(String[] args) 
+	{
+		GraphProblem g = new GraphProblem();
+		int M[][] = {{ 1, 1, 0, 0, 0 }, 
+                     { 0, 1, 0, 0, 1 }, 
+                     { 1, 0, 0, 1, 1 }, 
+                     { 0, 0, 0, 0, 0 }, 
+                     { 1, 0, 1, 0, 1 }};
+		int n = M.length;
+		boolean visited[][] = new boolean[n][M[0].length];
+		System.out.println(g.countisland(M,visited));
+	}
+}
