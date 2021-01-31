@@ -91,3 +91,142 @@ public class GraphProblem
 		System.out.println(g.countisland(M,visited));
 	}
 }
+// This code using BFS (LEFT, RIGHT, TOP, DOWN)+Diagonal
+import java.util.*;
+class coordinate
+{
+	int x;
+	int y;
+	coordinate(int x,int y)
+	{
+		this.x=x;
+		this.y=y;
+	}
+}
+public class GraphProblem 
+{
+	static boolean issafe(int mat[][],int x,int y,boolean visited[][])
+	{
+		if(x>=0 && y>=0 && x<mat.length && y<mat[0].length && !visited[x][y] && mat[x][y]==1)
+			return true;
+		return false;
+	}
+	static void BFSUtil(int mat[][],boolean visited[][],int x,int y)
+	{
+		Queue<coordinate> q = new LinkedList<>();
+		q.add(new coordinate(x,y));
+		while(!q.isEmpty())
+		{
+			int row[] = {-1,-1,-1,0,0,1,1,1};
+			int col[] = {-1,0,1,-1,1,-1,0,1};
+			coordinate temp = q.remove();
+			for(int i=0;i<8;i++)
+			{
+				if(issafe(mat,temp.x+row[i],temp.y+col[i],visited))
+				{
+					visited[temp.x+row[i]][temp.y+col[i]]=true;
+					q.add(new coordinate(temp.x+row[i],temp.y+col[i]));
+				}
+			}
+		}
+		
+	}
+	static int countallisland(int mat[][],boolean visited[][])
+	{
+		int count=0;
+		for(int i=0;i<mat.length;++i)
+		{
+			for(int j=0;j<mat[i].length;++j)
+			{
+				if(!visited[i][j] && mat[i][j]==1)
+				{
+					BFSUtil(mat,visited,i,j);
+					++count;
+				}
+			}
+		}
+		return count;
+	}
+	public static void main(String[] args) 
+	{
+		int mat[][] = {{1, 1, 0, 0, 0},
+                       {0, 1, 0, 0, 1},
+                       {1, 0, 0, 1, 1},
+                       {0, 0, 0, 0, 0},
+                       {1, 0, 1, 0, 1}};
+		int n = mat.length;
+		boolean visited[][] = new boolean[n][mat[0].length];
+		System.out.println(countallisland(mat,visited));
+	}
+}
+//This code using BFS (LEFT, RIGHT, TOP, DOWN)
+import java.util.*;
+class coordinate
+{
+	int x;
+	int y;
+	coordinate(int x,int y)
+	{
+		this.x=x;
+		this.y=y;
+	}
+}
+public class GraphProblem 
+{
+	static boolean issafe(int mat[][],int x,int y,boolean visited[][])
+	{
+		if(x>=0 && y>=0 && x<mat.length && y<mat[0].length && !visited[x][y] && mat[x][y]==1)
+			return true;
+		return false;
+	}
+	static void BFSUtil(int mat[][],boolean visited[][],int x,int y)
+	{
+		Queue<coordinate> q = new LinkedList<>();
+		q.add(new coordinate(x,y));
+		while(!q.isEmpty())
+		{
+			// These array defines the positions like first element of row array and col array defines up position 
+			// than next define left position than right than down.
+			int row[] = {-1,0,0,1};
+			int col[] = {0,-1,1,0};
+			coordinate temp = q.remove();
+			for(int i=0;i<8;i++)
+			{
+				if(issafe(mat,temp.x+row[i],temp.y+col[i],visited))
+				{
+					visited[temp.x+row[i]][temp.y+col[i]]=true;
+					q.add(new coordinate(temp.x+row[i],temp.y+col[i]));
+				}
+			}
+		}
+		
+	}
+	static int countallisland(int mat[][],boolean visited[][])
+	{
+		int count=0;
+		for(int i=0;i<mat.length;++i)
+		{
+			for(int j=0;j<mat[i].length;++j)
+			{
+				if(!visited[i][j] && mat[i][j]==1)
+				{
+					BFSUtil(mat,visited,i,j);
+					++count;
+				}
+			}
+		}
+		return count;
+	}
+	public static void main(String[] args) 
+	{
+		int mat[][] = {{1, 1, 0, 0, 0},
+                       {0, 1, 0, 0, 1},
+                       {1, 0, 0, 1, 1},
+                       {0, 0, 0, 0, 0},
+                       {1, 0, 1, 0, 1}};
+		int n = mat.length;
+		boolean visited[][] = new boolean[n][mat[0].length];
+		System.out.println(countallisland(mat,visited));
+	}
+}
+
