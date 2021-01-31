@@ -1,0 +1,38 @@
+//Flood Fill Algorithm
+import java.util.*;
+public class GraphProblem 
+{	
+	static void dfs(boolean visited[][],int r,int c,int maze[][],String psf)
+	{
+		if(r<0 || c<0 || r==maze.length || c==maze[0].length || maze[r][c]==1 || visited[r][c]==true)
+			return;
+		if(r==maze.length-1 && c==maze[0].length-1)
+		{
+			System.out.println(psf);
+			return;
+		}
+		visited[r][c]=true;
+		dfs(visited,r-1,c,maze,psf+"T ");
+		dfs(visited,r,c-1,maze,psf+"L ");
+		dfs(visited,r+1,c,maze,psf+"D ");
+		dfs(visited,r,c+1,maze,psf+"R ");
+		visited[r][c]=false;
+	}
+	static void floodfill(boolean visited[][],int r,int c,int maze[][])
+	{
+		dfs(visited,0,0,maze,"");
+	}
+	public static void main(String[] args) 
+	{
+		int maze[][] = {{0,1,0,0,0,0,0},
+				        {0,1,0,1,1,1,0},
+				        {0,0,0,0,0,0,0},
+				        {1,0,1,1,0,1,1},
+				        {1,0,1,1,0,1,1},
+				        {1,0,0,0,0,0,0}};
+		int r=6;
+		int c=7;
+		boolean visited[][] = new boolean[r][c];
+		floodfill(visited,0,0,maze);
+	}
+}
