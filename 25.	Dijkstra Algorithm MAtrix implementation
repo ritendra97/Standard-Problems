@@ -1,0 +1,69 @@
+import java.util.*;
+public class GraphProblem 
+{
+	static int V=6;
+	int Parent[];
+	boolean visited[];
+	int value[];
+	static int findmin(int value[],boolean visited[])
+	{
+		int min=Integer.MAX_VALUE;
+		int vertex=-1;
+		for(int i=0;i<V;i++)
+		{
+			if(value[i]<min && visited[i]==false)
+			{
+				min=value[i];
+				vertex=i;
+			}
+		}
+		return vertex;
+	}
+	public static void dijkstra(int graph[][])
+	{
+		int Parent[]=new int[V];
+		boolean visited[]=new boolean[V];
+		int value[]=new int[V];
+		for(int i=0;i<V;i++)
+		{
+			value[i]=Integer.MAX_VALUE;
+			visited[i]=false;
+			Parent[i]=-1;
+		}
+		value[0]=0;
+		for(int i=0;i<V-1;i++)
+		{
+			//Select best Vertex by applying greedy method
+			int U = findmin(value,visited);
+			visited[U] = true;	//Include new Vertex in shortest Path Graph
+
+			//Relax adjacent vertices (not yet included in shortest path graph)
+			for(int j=0;j<V;j++)
+			{
+				/* 3 conditions to relax:-
+				      1.Edge is present from U to j.
+				      2.Vertex j is not included in shortest path graph
+				      3.Edge weight is smaller than current edge weight
+				*/
+				if(graph[U][j]!=0 && visited[j]==false && value[U]!=Integer.MAX_VALUE
+				&& (value[U]+graph[U][j] < value[j]))
+				{
+					value[j] = value[U]+graph[U][j];
+					Parent[j] = U;
+				}
+			}
+		}
+		for(int i=1;i<V;++i)
+			System.out.println("U->V: "+Parent[i]+"->"+i+"  wt = "+graph[Parent[i]][i]+"\n");
+	}
+	public static void main(String[] args) 
+	{
+		int graph[][]={{0, 1, 4, 0, 0, 0},
+		               {1, 0, 4, 2, 7, 0},
+		               {4, 4, 0, 3, 5, 0},
+		               {0, 2, 3, 0, 4, 6},
+	    	           {0, 7, 5, 4, 0, 7},
+     		           {0, 0, 0, 6, 7, 0}};
+		dijkstra(graph);
+	}
+}
