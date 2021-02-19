@@ -1,0 +1,102 @@
+//Union-Find Algorithm | Set 2 (Union By Rank and Path Compression)
+import java.util.*;
+class Edge
+{
+	int src;
+	int des;
+	Edge(int src,int des)
+	{
+		this.src=src;
+		this.des=des;
+	}
+	Edge()
+	{};
+}
+class Node
+{
+	int parent;
+	int rank;
+	Node()
+	{};
+}
+public class Graph 
+{
+	Edge[] edge;
+	int ne;
+	int nv;
+	Node[] dsuf;
+	Graph(int E,int V)
+	{
+		ne=E;
+		nv=V;
+		edge = new Edge[E];
+		for(int i=0;i<E;i++)
+		{
+			edge[i]=new Edge();
+		}
+		//dsuf->disjoint set union find operation
+		dsuf= new Node[V];
+		for(int i=0;i<V;i++)
+		{
+			dsuf[i] = new Node();
+		}
+		for(int i=0;i<V;i++)
+		{
+			dsuf[i].parent=-1;
+			dsuf[i].rank=0;
+		}
+	}
+	int find(int v)
+	{
+		if(dsuf[v].parent==-1)
+			return v;
+		return dsuf[v].parent =find(dsuf[v].parent);
+	}
+	void unoin_op(int fromP,int topP)
+	{
+		if(dsuf[fromP].rank>dsuf[topP].rank)
+			dsuf[topP].parent=fromP;
+		else if(dsuf[fromP].rank<dsuf[topP].rank)
+			dsuf[fromP].parent=topP;
+		else
+		{
+			dsuf[fromP].parent=topP;
+			dsuf[topP].rank+=1;
+		}
+	}
+	boolean isCycle()
+	{
+		for(Edge k : edge)
+		{
+			int fromP = find(k.src);
+			int topP  = find(k.des);
+			if(fromP==topP)
+				return true;
+			unoin_op(fromP,topP);
+		}
+		return false;
+	}
+	public static void main(String[] args) 
+	{
+		int V=5;
+		int E=5;
+		Graph g = new Graph(5,5);
+		
+		g.edge[0].src=0;
+		g.edge[0].src=1;
+		
+		g.edge[1].src=1;
+		g.edge[1].src=2;
+		
+		g.edge[2].src=2;
+		g.edge[2].src=3;
+		
+		g.edge[3].src=0;
+		g.edge[3].src=4;
+		
+		g.edge[4].src=4;
+		g.edge[4].src=3;
+		
+		System.out.println(g.isCycle());
+	}
+}
