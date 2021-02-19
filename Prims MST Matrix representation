@@ -1,0 +1,63 @@
+Prims MST Matrix representation
+import java.util.*;
+public class Graph 
+{
+	static int minkey(int weight[],boolean visited[])
+	{
+		int min = Integer.MAX_VALUE;
+		int min_index=-1;
+		for(int i=0;i<weight.length;i++)
+		{
+			if(!visited[i] && weight[i]<min)
+			{
+				min = weight[i];
+				min_index = i;
+			}
+		}
+		return min_index;
+	}
+	static void primMST(int graph[][],int V) 
+    {
+		int parent[] = new int[V];
+		int weight[] = new int[V];
+		boolean visited[] = new boolean[V];
+		for(int i=0;i<V;i++)
+		{
+			weight[i]=Integer.MAX_VALUE;
+			visited[i]=false;
+		}
+		weight[0]=0;
+		parent[0]=-1;
+		for(int i=0;i<V-1;i++)
+		{
+			int u = minkey(weight,visited);
+			visited[u]=true;
+			for(int j=0;j<V;j++)
+			{
+				if(graph[u][j]!=0 && visited[j]==false && graph[u][j]<weight[j])
+				{
+					parent[j]=u;
+					weight[j]=graph[u][j];
+				}
+			}
+		}
+		print(parent,graph);
+    }
+	static void print(int parent[],int graph[][])
+	{
+		for(int i=1;i<graph.length;i++)
+		{
+			System.out.println(parent[i] + " - " + i + "\t" + graph[i][parent[i]]);
+		}
+	}
+	public static void main(String[] args) 
+	{
+		int graph[][]={{ 0, 2, 0, 6, 0 }, 
+			{ 2, 0, 3, 8, 5 },
+            { 0, 3, 0, 0, 7 }, 
+            { 6, 8, 0, 0, 9 }, 
+            { 0, 5, 7, 9, 0 } };
+		
+        primMST(graph,5);
+	}
+}
