@@ -1,0 +1,51 @@
+//Nqueen Problem
+import java.util.*;
+public class Backracking 
+{
+	
+	public static void printSolution(int board[][],int N) 
+	{ 
+	   for (int i = 0; i < N; i++) { 
+	      for (int j = 0; j < N; j++) 
+	         System.out.print(" " + board[i][j]+ " "); 
+	            System.out.println(); 
+	   } 
+	}
+	public static boolean solveNQUtil(int board[][],int row, boolean cols[],boolean ndiag[],boolean rdiag[],int N) 
+    { 
+		if(row>=board.length)
+		{
+			return true;
+		}
+		for(int col=0;col<board[0].length;col++)
+		{
+			if(board[row][col]==0 && cols[col]==false && ndiag[row+col]==false && rdiag[row-col+board.length-1]==false)
+			{
+				board[row][col]=1;
+				cols[col]=true;
+				ndiag[row+col]=true;
+				rdiag[row-col+board.length-1]=true;
+				if(solveNQUtil(board,row+1,cols,ndiag,rdiag,N))
+				 return true;
+				board[row][col]=0;
+				cols[col]=false;
+				ndiag[row+col]=false;
+				rdiag[row-col+board.length-1]=false;
+			}
+		}
+		return false;
+    }
+	public static void main(String[] args) 
+	{
+		int board[][] = { { 0, 0, 0, 0 }, 
+                { 0, 0, 0, 0 }, 
+                { 0, 0, 0, 0 }, 
+                { 0, 0, 0, 0 } };
+		int N = 4;
+		boolean cols[] = new boolean[N];
+		boolean ndiag[] = new boolean[2*N-1];
+		boolean rdiag[] = new boolean[2*N-1];
+		solveNQUtil(board,0,cols, ndiag,rdiag,N);
+		printSolution(board,N);
+	}
+}
