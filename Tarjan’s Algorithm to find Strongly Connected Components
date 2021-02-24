@@ -1,0 +1,85 @@
+//Tarjan’s Algorithm to find Strongly Connected Components
+import java.util.*;
+
+public class Graph 
+{
+	private int Time; 
+	private int V;
+	ArrayList<ArrayList<Integer>> graph;
+	Graph(int v)
+	{
+	    V=v;
+	    graph = new ArrayList<ArrayList<Integer>>(V);
+	    for(int i =0;i<V;i++)
+	    {
+    		graph.add(i,new ArrayList<Integer>());
+	   	}
+	    Time=0;
+	}
+	void addEdge(int v,int u)
+	{
+		graph.get(v).add(u);
+	}	
+	void DFS(int u,int disc[],int low[],Stack<Integer> s,boolean presentninstack[])
+	{
+		disc[u]=Time;
+		low[u]=Time;
+		Time+=1;
+		s.push(u);
+		presentninstack[u]=true;
+		for(Integer child:graph.get(u))
+		{
+			if(disc[child]==-1)
+			{
+				DFS(child,disc,low,s,presentninstack);
+				low[u]=Math.min(low[u], low[child]);// cross Edge:
+			}
+			else if(presentninstack[child]==true)//this is back Edge:
+				low[u] = Math.min(low[u], disc[child]);
+		}
+		// u is the head of SCC how will u judge it is head node by seeing that low time and disc time if both are same than this is 
+		// head node;
+		int w = -1;  
+	    if (low[u] == disc[u]) 
+	    { 
+	        while (w != u) 
+	        {  
+	            w = (int)s.pop(); 
+	            System.out.print(w + " "); 
+	            presentninstack[w] = false; 
+	        } 
+	        System.out.println();  
+	    } 
+	}
+	void findSCCs_Tarjan()
+	{
+	    boolean presentninstack[] = new boolean[V];
+	    int disc[] = new int[V];
+	    int low[]  = new int[V];
+	    for(int i=0;i<V;i++)
+	    {
+	    	disc[i]=-1;
+	    	low[i]=-1;
+	    	presentninstack[i]=false;
+	    }
+	    Stack<Integer> s = new Stack<>();
+	    for(int i=0;i<V;i++)
+	    {
+	    	if(disc[i]==-1)
+	    	{
+	    		DFS(i,disc,low,s,presentninstack);
+	    	}
+	    }
+	}
+	public static void main(String[] args) 
+	{
+		Graph g = new Graph(5);
+		g.addEdge(1,0);
+		g.addEdge(0,2);
+		g.addEdge(2,1);
+		g.addEdge(0,3);
+		g.addEdge(3,4);
+
+		g.findSCCs_Tarjan();
+	}
+}
