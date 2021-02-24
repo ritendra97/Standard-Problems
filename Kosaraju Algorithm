@@ -1,0 +1,89 @@
+//Kosaraju Algorithm
+import java.util.*;
+
+public class Graph 
+{
+	private int V;
+	ArrayList<ArrayList<Integer>> graph;
+	ArrayList<ArrayList<Integer>> transpose;
+	Graph(int v)
+	{
+	    V=v;
+	    graph = new ArrayList<ArrayList<Integer>>(V);
+	    transpose = new ArrayList<ArrayList<Integer>>(V);
+	    for(int i =0;i<V;i++)
+	    {
+    		graph.add(i,new ArrayList<Integer>());
+    		transpose.add(i,new ArrayList<Integer>());
+	   	}
+	}
+	void addEdge(int v,int u,boolean choice)
+	{
+		if(!choice)
+			graph.get(v).add(u);
+		else
+			transpose.get(v).add(u);
+	}
+	void makeTranspose()
+	{
+		for(int i=0;i<V;i++)
+		{
+			for(int j=0;j<graph.get(i).size();j++)
+			{
+				addEdge(graph.get(i).get(j),i,true);
+			}
+		}
+	}
+	void DFSUtill(int src,Stack<Integer> s,boolean visited[])
+	{
+		visited[src]=true;
+		for(Integer child: graph.get(src))
+		{
+			if(!visited[child])
+			    DFSUtill(child,s,visited);
+		}
+		s.push(src);
+	}
+	void DFS2(int i,boolean visited[])
+	{
+		System.out.print(i+" ");
+		visited[i] = true;
+		for(int j: transpose.get(i))
+			if(!visited[j])
+				DFS2(j,visited);
+	}
+	void findSCCs()
+	{
+		Stack<Integer> s = new Stack<Integer>();
+		boolean visited[] = new boolean[V];
+		for(int i=0;i<V;i++)
+		{
+			if(!visited[i])
+				DFSUtill(i,s,visited);
+		}
+		Arrays.fill(visited, false);
+		makeTranspose();
+		while(!s.isEmpty())
+		{
+			int x = s.pop();
+			if(!visited[x])
+			{
+				DFS2(x,visited);
+				System.out.println();
+			}
+		}
+	}
+	
+	public static void main(String[] args) 
+	{
+		Graph g1 = new Graph(5); 
+        g1.addEdge(1, 0,false); 
+        g1.addEdge(0, 2,false); 
+        g1.addEdge(2, 1,false); 
+        g1.addEdge(0, 3,false); 
+        g1.addEdge(3, 4,false); 
+        //g1.addEdge(4, 2,false);
+        
+        g1.findSCCs();
+	}
+}
