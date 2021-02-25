@@ -1,0 +1,83 @@
+import java.util.*;
+public class Graph
+{
+	int Time=0;
+	int V;
+	ArrayList<ArrayList<Integer>> graph;
+	boolean visited[];
+    Graph(int v)
+	{
+		V=v;
+		graph = new ArrayList<ArrayList<Integer>>(V);
+		visited = new boolean[V];
+		
+		for(int i=0;i<V;i++)
+		{
+			graph.add(i,new ArrayList<Integer>());
+		}
+	    Time=0;
+	}
+	public void addEdge(int v,int w)
+	{
+		graph.get(v).add(w);
+		//graph.get(w).add(v);
+	}
+	public void DFS(int u, int disc[],int low[], int parent[],boolean Articulation_point[])
+	{
+		disc[u]=Time;
+		low[u]=Time;
+		Time+=1;
+		int children =0;
+		for(Integer child: graph.get(u))
+		{
+			if(disc[child]==-1)
+			{
+				children++;
+				parent[child]=u;
+				DFS(child,disc,low,parent,Articulation_point);
+				low[u] = Math.min(low[u],low[child]);
+				if(parent[u]==-1 && children>1)	//Case-1: U is root
+					Articulation_point[u] = true;
+
+				if(parent[u]!=-1 && low[child]>=disc[u])	//Case-2: Atleast 1 component will get separated
+					Articulation_point[u] = true;
+			}	
+			else if(child!=parent[u])
+				low[u]=Math.min(low[u],disc[child]);
+		}
+	}
+	public void Articulationpoint()
+	{
+		boolean Articulation_point[] = new boolean[V];
+	    int disc[] = new int[V];
+	    int low[]  = new int[V];
+	    int parent[] = new int[V];
+	    for(int i=0;i<V;i++)
+	    {
+	    	disc[i]=-1;
+	    	low[i]=-1;
+	    	parent[i]=-1;
+	    	Articulation_point[i]=false;
+	    }
+	    for(int i=0;i<V;++i)
+			if(disc[i]==-1)
+				DFS(i,disc,low,parent,Articulation_point);
+	    
+	    System.out.println("Articulation Points are: ");
+		for(int i=0;i<V;++i)
+			if(Articulation_point[i]==true)
+		        System.out.print(i+" ");
+	}
+	public static void main(String[] args) 
+	{
+		Graph g = new Graph(5);
+		g.addEdge(1, 0);
+	    g.addEdge(0, 2);
+	    g.addEdge(2, 1);
+	    g.addEdge(0, 3);
+	    g.addEdge(3, 4);
+	    g.addEdge(2, 4); 
+		
+		g.Articulationpoint();
+	}
+}
