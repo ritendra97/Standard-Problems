@@ -1,0 +1,88 @@
+//Eulerian path and circuit for undirected graph
+import java.util.*;
+public class Graph
+{
+	int V;
+	ArrayList<ArrayList<Integer>> graph;
+	boolean visited[];
+    Graph(int v)
+	{
+		V=v;
+		graph = new ArrayList<ArrayList<Integer>>(V);
+		visited = new boolean[V];
+		for(int i=0;i<V;i++)
+		{
+			graph.add(i,new ArrayList<Integer>());
+		}
+	}
+    public void addEdge(int v,int w)
+	{
+		graph.get(v).add(w);
+		graph.get(w).add(v);
+	}
+    public void DFSUtil(int src)
+    {
+    	visited[src]=true;
+    	for(Integer child:graph.get(src))
+    	{
+    		if(!visited[child])
+    			DFSUtil(child);
+    	}
+    }
+    public boolean is_connected()
+    {
+    	int i;
+    	// whose vertices is not zero.
+    	for(i=0;i<V;i++)
+    	{
+    		if(graph.get(i).size()!=0)
+    			break;
+    	}
+    	if(i==V)
+    		return true;
+    	DFSUtil(i);
+    	for(int j=0;j<V;j++)
+    	{
+    		if(visited[i]==false && graph.get(i).size()>0)
+    			return false;
+    	}
+    	return true;
+    }
+    public int is_Eulerian()
+    {
+    	if(!is_connected())
+    		return 0;
+    	int odd=0;
+    	for(int i=0;i<V;i++)
+    	{
+    		if(graph.get(i).size()%2!=0)
+    			odd++;
+    	}
+    	
+    	if(odd>2)
+    		return 0;
+    	return (odd==2)?1:2;
+    }
+    public void test() 
+    { 
+        int res = is_Eulerian(); 
+        if (res == 0) 
+            System.out.println("graph is not Eulerian"); 
+        else if (res == 1) 
+            System.out.println("graph has a Euler path"); 
+        else
+           System.out.println("graph has a Euler cycle"); 
+    }
+	public static void main(String[] args) 
+	{
+		Graph g1 = new Graph(5); 
+        g1.addEdge(1, 0); 
+        g1.addEdge(0, 2); 
+        g1.addEdge(2, 1); 
+        g1.addEdge(0, 3); 
+        g1.addEdge(3, 4); 
+        
+        g1.test(); 
+  
+	}
+}
