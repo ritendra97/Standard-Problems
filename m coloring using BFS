@@ -1,0 +1,74 @@
+import java.util.*;
+class Node
+{
+	int color =1;
+	ArrayList<Integer> edges  = new ArrayList<Integer>();
+}
+public class Graph 
+{
+	public static int canPaint(ArrayList<Node> nodes, int n, int m)
+    {
+		ArrayList<Integer> visited = new ArrayList<Integer>();
+		for(int i=0;i<n+1;i++)
+		{
+			visited.add(0);
+		}
+		
+		int maxcolor =1;
+		
+		for(int sv =0;sv<=n;sv++)
+		{
+			if(visited.get(sv)>0)
+				continue;
+			visited.set(sv,1);
+			Queue<Integer> q = new LinkedList<Integer>();
+			q.add(sv);
+			while(!q.isEmpty())
+			{
+				int top = q.remove();
+				for(Integer e : nodes.get(top).edges)
+				{
+					if(nodes.get(top).color==nodes.get(e).color)
+					{
+						nodes.get(e).color+=1;
+					}
+					maxcolor = Math.max(maxcolor, Math.max(nodes.get(top).color, nodes.get(e).color));
+					if(maxcolor>m)
+						return 0;
+					if(visited.get(e)==0)
+					{
+						visited.set(e, 1);
+						q.add(sv);
+					}
+				}
+			}
+		}
+		return 1;
+    }
+	public static void main(String[] args) 
+	{
+		 int n = 4;
+	     int [][] graph = {{ 0, 1, 1, 1 },
+	        		       { 1, 0, 1, 0 },
+	                       { 1, 1, 0, 1 },
+	                       { 1, 0, 1, 0 }};
+	     int m =3;
+	     ArrayList<Node> nodes = new ArrayList<Node>();
+	     for(int i=0;i<n+1;i++)
+	     {
+	    	 nodes.add(i,new Node());
+	     }
+	     for(int i=0;i<n;i++)
+	     {
+	    	 for(int j=0;j<n;j++)
+	    	 {
+	    		 if(graph[i][j]>0)
+	    		 {
+	    			 nodes.get(i).edges.add(j);
+	    			 nodes.get(j).edges.add(i);
+	    		 }
+	    	 }
+	     }
+	     System.out.println(canPaint(nodes,n,m));
+	}
+}
