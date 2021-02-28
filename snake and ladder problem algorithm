@@ -1,0 +1,63 @@
+//snake and ladder problem algorithm
+import java.util.*;
+public class Graph 
+{
+	static int V =6;
+	public static int snakLadder(int[][] graph)
+	{
+		int step=0;
+		int n = graph.length;
+		Queue<Integer> q = new LinkedList<>();
+		boolean visited[][] = new boolean[V][V];
+		visited[n-1][0]=true;
+		q.add(1);
+		while(!q.isEmpty())
+		{
+			int size = q.size();
+			for(int i=0;i<size;i++)
+			{
+			    int x = q.poll();
+			    if(x==n*n)
+					return step;
+				for(int k=1;k<=6;k++)
+				{
+				   	if(k+x>n*n)
+				   		break;
+				   	int pos[] =findrowcolumn(k+x,n);
+				   	int r = pos[0];
+				   	int c = pos[1];
+				    if(visited[r][c]==true)
+				    	continue;
+				    visited[r][c]=true;
+				    if(graph[r][c]==-1)
+				    	q.add(k+x);
+				    else
+				    	q.add(graph[r][c]);
+				}
+			}
+			step++;
+		}
+		return -1;
+	}
+	public static int[] findrowcolumn(int curr,int n)
+	{
+		int r = n-(curr-1)/n-1;
+		int c = (curr-1)%n;
+		if(r%2==n%2)
+			return new int[]{r,n-1-c};
+		else
+			return new int[] {r,c};
+				
+		
+	}
+	public static void main(String[] args)
+	{
+		int graph[][]= {{-1,-1,-1,-1,-1,-1},
+				        {-1,-1,-1,-1,-1,-1},
+				        {-1,-1,-1,-1,-1,-1},
+		         		{-1,35,-1,-1,13,-1},
+			        	{-1,-1,-1,-1,-1,-1},
+				        {-1,15,-1,-1,-1,-1}};
+		System.out.println(snakLadder(graph));
+	}
+}
