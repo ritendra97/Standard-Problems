@@ -1,4 +1,80 @@
 //Kosaraju Algorithm
+
+//Time Complexity: The above algorithm calls DFS, finds reverse of the graph and again calls DFS. DFS takes O(V+E) 
+//for a graph represented using adjacency list. Reversing a graph also takes O(V+E) time. For reversing the graph, we simple traverse all adjacency lists.
+
+class Solution
+{
+    public static void transpose(int V,ArrayList<ArrayList<Integer>> adj,
+    		 ArrayList<ArrayList<Integer>> rev) {
+        
+        for(int i=0;i<V;i++) {
+            
+            for(int j : adj.get(i)) {
+                
+                rev.get(j).add(i);
+            }
+        }
+    }
+     public static void DFS2(boolean visited[], int src , ArrayList<ArrayList<Integer>> rev) {
+         
+         visited[src] = true;
+         
+         ArrayList<Integer> children = rev.get(src);
+         
+         for(Integer child:children) {
+             
+             if(!visited[child])
+                DFS2(visited,child,rev);
+         }
+     }
+	public static void DFS(Stack<Integer> st, boolean visited[],int src, ArrayList<ArrayList<Integer>> adj) {
+        
+        visited[src] = true;
+        
+        ArrayList<Integer> children = adj.get(src);
+        
+        for(Integer child:children) {
+            
+            if(!visited[child])
+               DFS(st,visited,child,adj);
+        }
+        
+        st.push(src);
+    }
+    public static int kosaraju(int V, ArrayList<ArrayList<Integer>> adj) {
+        
+        int count=0;
+        ArrayList<ArrayList<Integer>> rev = new ArrayList<>();
+        
+        for(int i=0;i<V;i++) {
+           
+            rev.add(i,new ArrayList<Integer>());
+            
+        }
+        
+        Stack<Integer> st = new Stack<Integer>();
+        boolean visited[] = new boolean[V];
+        
+        for(int i=0;i<V;i++){
+            if(!visited[i])
+                DFS(st,visited,i,adj);
+        }
+        
+        Arrays.fill(visited,false);
+        transpose(V,adj,rev);
+        while(!st.isEmpty()){
+            
+            int top = st.pop();
+            if(!visited[top]){
+                DFS2(visited,top,rev);
+                count++;
+            }
+        }
+        return count;
+    }
+}
+
 import java.util.*;
 
 public class Graph 
