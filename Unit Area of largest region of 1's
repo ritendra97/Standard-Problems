@@ -1,0 +1,46 @@
+//Unit Area of largest region of 1's
+
+import java.util.*;
+
+public class Graph {
+
+	public static int dfs(int grid[][], int row, int col, boolean visited[][]) {
+
+		if (row < 0 || col < 0 || row >= grid.length || col >= grid.length || grid[row][col] == 0
+				|| visited[row][col] == true)
+			return 0;
+
+		visited[row][col] = true;
+
+		return 1+dfs(grid, row + 1, col,  visited)
+		+dfs(grid, row - 1, col,  visited)
+		+dfs(grid, row, col + 1, visited)
+		+dfs(grid, row, col - 1,  visited);
+	}
+
+	public static int countLargestArea(int grid[][], boolean visited[][]) {
+
+		int max_count = Integer.MIN_VALUE;
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[0].length; j++) {
+				if (grid[i][j] == 1) {
+					max_count = Math.max(max_count, dfs(grid, i, j , visited));
+				}
+			}
+		}
+		return max_count;
+	}
+
+	public static void main(String[] args) {
+
+		int grid[][] = { { 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 }, 
+                { 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0 },
+				{ 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0 },
+				{ 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 },
+				{ 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0 } };
+
+		int n = grid.length;
+		boolean visited[][] = new boolean[n][grid[0].length];
+		System.out.println(countLargestArea(grid, visited));
+	}
+}
